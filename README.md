@@ -102,7 +102,7 @@ conda activate DEMO_video
 ```
 
 **Step 2**: Install PyTorch / torchvision / torchaudio with CUDA 11.7
-support (all three come from the same index URL)
+support
 
 ```bash
 pip install --index-url https://download.pytorch.org/whl/cu117 \
@@ -179,7 +179,6 @@ python run_pipeline.py \
     --rounds 5 \
     --lr 0.000001 \
     --num_workers 8 \
-    --pretrained \
   --step2-args \
     --attack_batch_size 16 \
     --cleanset_max 120 \
@@ -203,7 +202,6 @@ python run_pipeline.py \
     --rounds 5 \
     --lr 0.00001 \
     --num_workers 8 \
-    --pretrained \
   --step2-args \
     --attack_batch_size 64 \
     --cleanset_max 200 \
@@ -227,7 +225,6 @@ python3 run_pipeline.py \
     --rounds 5 \
     --lr 0.000001 \
     --num_workers 8 \
-    --pretrained \
   --step2-args \
     --attack_batch_size 64 \
     --cleanset_max 1000 \
@@ -251,7 +248,6 @@ python3 run_pipeline.py \
     --rounds 5 \
     --lr 0.00001 \
     --num_workers 8 \
-    --pretrained \
   --step2-args \
     --client_edit_ratio 0.8 \
     --steps 50 \
