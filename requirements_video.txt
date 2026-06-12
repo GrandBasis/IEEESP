@@ -1,23 +1,41 @@
-torch==2.0.1
-torchvision==0.15.2
-torchaudio==2.11.0
+# Only packages that are NOT already installed by the previous README steps.
+#
+# Everything else (torch/torchvision/torchaudio, mmengine, mmcv, decord,
+# opencv-contrib-python, einops, scipy, matplotlib, pillow, PyYAML, tqdm,
+# requests) is pulled in by:
+#   * Step 2  — `pip install ... --index-url https://download.pytorch.org/whl/cu117`
+#   * Step 3  — `mim install "mmengine==0.10.7"` and `mim install "mmcv==2.1.0"`
+#               (the mim wheels for mmcv live on `download.openmmlab.com`,
+#                NOT on PyPI / Tsinghua mirror, so this step is mandatory)
+#   * Step 5  — `pip install -r mmaction2/requirements/build.txt` (brings in
+#               decord/opencv-contrib-python/einops/scipy/matplotlib/Pillow)
+#
+# Why we still need this file at all — two extras only:
+#
+# 1. `numpy<2`.  torch 2.0.1 was built against the numpy 1.x ABI. Some of
+#    the mmaction2 dependency chain (openmim → pandas → numpy) drags in
+#    numpy 2.x on PyPI, and on numpy >= 2.0
+#    `tensor.detach().cpu().numpy()` raises
+#    `RuntimeError: Numpy is not available`.  step2 hits this when
+#    generating the PGD target labels.  Pin to the last numpy 1.x release
+#    that pre-dates the ABI break (1.26.4).
+#
+# 2. `importlib_metadata`.  mmaction2 1.2.0's
+#    `mmaction/utils/dependency.py` does
+#    `from importlib_metadata import PackageNotFoundError, distribution`,
+#    which is unconditionally imported at top level.  This package is
+#    not pulled in by the build chain on Python 3.10, so we install it
+#    explicitly here.
+#
+# WARNING — do NOT add `mmcv==2.1.0` or `mmengine==0.10.7` back to this
+# file.  If you do, pip's resolver will try to (re)install them from the
+# configured PyPI mirror (e.g. Tsinghua), where there are no prebuilt
+# mmcv wheels, so pip falls back to building from source.  mmcv 2.1.0's
+# setup.py needs `pkg_resources`, which is no longer bundled with
+# setuptools >= 60, so the build aborts with
+# `ModuleNotFoundError: No module named 'pkg_resources'`.  Use `mim
+# install` (Step 3) for both — that fetches the correct cu117 wheel from
+# `download.openmmlab.com`.
 
-mmengine==0.10.7
-mmcv==2.1.0
-
--e ./mmaction2
-
-decord==0.6.0
-opencv-python==4.13.0.92
-opencv-contrib-python==4.13.0.92
-einops==0.8.2
-
-numpy==1.26.4
-pandas==2.3.3
-scipy==1.15.3
-
-matplotlib==3.10.9
-pillow==12.2.0
-PyYAML==6.0.3
-tqdm==4.65.2
-requests==2.28.2
+numpy<2
+importlib_metadata

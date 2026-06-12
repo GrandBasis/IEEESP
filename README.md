@@ -18,6 +18,13 @@ A unified framework for federated learning with multimodal data processing, supp
 | Image | Tiny-ImageNet | ViT-B-16 (Vision Transformer) | 200 |
 | Text | AG News | BERT | 4 |
 
+### Datasets
+
+- **UCF101** (Video, 101 classes): action-recognition dataset from the UCF Center for Research in Computer Vision — <https://www.crcv.ucf.edu/data/UCF101.php>
+- **SpeechCommands v0.02** (Audio, 35 classes): Google’s short spoken-keyword corpus, mirrored on torchaudio — <https://datasets.readthedocs.io/en/latest/api/torchaudio.html#torchaudio.datasets.SPEECHCOMMANDS> (paper: <https://arxiv.org/abs/1804.03209>)
+- **Tiny-ImageNet** (Image, 200 classes): 200-class subset of ImageNet from Stanford CS231N — <http://cs231n.stanford.edu/tiny-imagenet-200.zip>
+- **AG News** (Text, 4 classes): topic-classification news corpus distributed via the HuggingFace `datasets` hub — <https://huggingface.co/datasets/ag_news>
+
 ## Project Structure
 
 ```
@@ -45,18 +52,18 @@ environment before running the pipeline.**
 
 | Modality | Conda env | Requirements file |
 |----------|-----------|-------------------|
-| Audio / Text / Image | `SLWM` | `requirements_audio_text_image.txt` |
-| Video | `SLWM_video` | `requirements_video.txt` |
+| Audio / Text / Image | `DEMO` | `requirements_audio_text_image.txt` |
+| Video | `DEMO_video` | `requirements_video.txt` |
 
 ### Prerequisites
 
 - `conda` (Miniconda or Anaconda)
 - Python >= 3.10
 - NVIDIA GPU with CUDA driver
-  - `SLWM`        -> tested with CUDA 12.4 (PyTorch 2.6.0+cu124)
-  - `SLWM_video`  -> tested with CUDA 11.7 (PyTorch 2.0.1+cu117)
+  - `DEMO`        -> tested with CUDA 12.4 (PyTorch 2.6.0+cu124)
+  - `DEMO_video`  -> tested with CUDA 11.7 (PyTorch 2.0.1+cu117)
 
-### Environment 1 — Audio / Text / Image (`SLWM`)
+### Environment 1 — Audio / Text / Image (`DEMO`)
 
 This env covers the `audio`, `text` and `image` pipelines
 (SpeechCommands, AG News, Tiny-ImageNet). It is built on a recent
@@ -65,8 +72,8 @@ PyTorch (2.6.0) with CUDA 12.4 wheels.
 **Step 1**: Create the conda environment and activate it
 
 ```bash
-conda create -n SLWM python=3.10 -y
-conda activate SLWM
+conda create -n DEMO python=3.10 -y
+conda activate DEMO
 ```
 
 **Step 2**: Install PyTorch with CUDA 12.4 support
@@ -82,20 +89,27 @@ pip install "torch==2.6.0" "torchvision==0.21.0" "torchaudio==2.6.0" \
 pip install -r requirements_audio_text_image.txt
 ```
 
-### Environment 2 — Video (`SLWM_video`)
+### Environment 2 — Video (`DEMO_video`)
+
+This env is built around **mmaction2 v1.2.0**, fetched from GitHub and
+built from source. It matches the CUDA 11.7 / cu117 prebuilt wheels of
+PyTorch 2.0.1.
 
 **Step 1**: Create the conda environment and activate it
 
 ```bash
-conda create -n SLWM_video python=3.10 -y
-conda activate SLWM_video
+conda create -n DEMO_video python=3.10 -y
+conda activate DEMO_video
 ```
 
-**Step 2**: Install PyTorch with CUDA 11.7 support
+**Step 2**: Install PyTorch / torchvision / torchaudio with CUDA 11.7
+support (all three come from the same index URL)
 
 ```bash
-pip install "torch==2.0.1+cu117" "torchvision==0.15.2+cu117" "torchaudio==2.11.0" \
-            --extra-index-url https://download.pytorch.org/whl/cu117
+pip install --index-url https://download.pytorch.org/whl/cu117 \
+    "torch==2.0.1+cu117" \
+    "torchvision==0.15.2+cu117" \
+    "torchaudio==2.0.2+cu117"
 ```
 
 **Step 3**: Install mmengine and mmcv
@@ -106,7 +120,8 @@ mim install "mmengine==0.10.7"
 mim install "mmcv==2.1.0"
 ```
 
-**Step 4**: Fetch the `mmaction2` source code
+**Step 4**: Fetch the `mmaction2` source code from GitHub and check
+out the v1.2.0 tag.
 
 ```bash
 git clone https://github.com/open-mmlab/mmaction2.git
@@ -120,7 +135,8 @@ pip install -r mmaction2/requirements/build.txt
 pip install -v -e ./mmaction2
 ```
 
-**Step 6**: Install the remaining packages
+**Step 6**: Install the two extras that the previous steps do **not**
+pull in automatically.
 
 ```bash
 pip install -r requirements_video.txt
