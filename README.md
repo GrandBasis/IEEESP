@@ -7,7 +7,6 @@ A unified framework for federated learning with multimodal data processing, supp
 - **Multi-Modal Support**: Video, Audio, Image, and Text
 - **Split Learning Training**: Federated training with multiple clients
 - **Client Watermarking**: Embed verifiable watermarks into client models
-- **Pre-trained Models**: Ready-to-use pre-trained weights for each modality
 
 ## Supported Modalities & Models
 
