@@ -1,0 +1,23 @@
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.11.0
+
+mmengine==0.10.7
+mmcv==2.1.0
+
+-e ./mmaction2
+
+decord==0.6.0
+opencv-python==4.13.0.92
+opencv-contrib-python==4.13.0.92
+einops==0.8.2
+
+numpy==1.26.4
+pandas==2.3.3
+scipy==1.15.3
+
+matplotlib==3.10.9
+pillow==12.2.0
+PyYAML==6.0.3
+tqdm==4.65.2
+requests==2.28.2
